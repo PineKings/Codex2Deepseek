@@ -1,0 +1,11 @@
+[project]
+name = "codex2deepseek"
+version = "0.2.0"
+description = "OpenAI Responses API ↔ DeepSeek Chat API 流式转发代理"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.136.0",
+    "uvicorn>=0.44.0",
+    "requests>=2.28",
+]

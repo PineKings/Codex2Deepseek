@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+.python-version
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Runtime
+proxy_debug.log
+debug_request_body.txt
+
+# Docker (避免层级嵌套)
+docker/
+Dockerfile
+docker-compose*.yml
+
+# Build / Dist
+dist/
+build/

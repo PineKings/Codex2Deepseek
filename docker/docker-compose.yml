@@ -1,0 +1,38 @@
+# ============================================================
+# Codex DeepSeek Proxy — Docker Compose 编排
+# ============================================================
+# 使用:
+#   docker compose -f docker/docker-compose.yml up -d       # 启动
+#   docker compose -f docker/docker-compose.yml logs -f     # 日志
+#   docker compose -f docker/docker-compose.yml down        # 停止
+#   docker compose -f docker/docker-compose.yml restart     # 重启
+# ============================================================
+
+services:
+  proxy:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    image: codex2deepseek:latest
+    container_name: codex2deepseek
+    ports:
+      - "127.0.0.1:12345:12345"
+    env_file:
+      - ../.env
+    restart: unless-stopped
+    user: "1000:1000"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('localhost', 12345), timeout=5).close()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
