@@ -11,12 +11,13 @@
 
 # ---- 构建阶段 ----
 # 使用与运行时相同的 slim 基镜像，避免 musl/glibc 不兼容问题
-FROM python:3.12-slim AS builder
+FROM docker.m.daocloud.io/python:3.12-slim AS builder
 
 WORKDIR /build
 
 # 安装 uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# 国内镜像加速: ghcr.nju.edu.cn
+COPY --from=ghcr.nju.edu.cn/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # 利用 Docker 层缓存：先复制依赖声明
 COPY pyproject.toml uv.lock ./
@@ -33,12 +34,13 @@ RUN uv sync --frozen --no-dev
 
 
 # ---- 运行时阶段 ----
-FROM python:3.12-slim
+FROM docker.m.daocloud.io/python:3.12-slim
 
 WORKDIR /app
 
 # 安装 ca-certificates 确保 HTTPS 请求正常
-RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends \
+# 使用国内 apt 镜像源加速
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources 2>/dev/null ||     sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list 2>/dev/null;     apt-get update -qq && apt-get install -y -qq --no-install-recommends \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
