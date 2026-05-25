@@ -179,14 +179,14 @@ DEEPSEEK_API_KEY=*********
 MY_API_KEY=sk-1234567890
 
 # 默认模型
-MODEL_DEFAULT = deepseek-v4-flash
+MODEL_DEFAULT=deepseek-v4-flash
 
 ## codex模型对应,为空则使用默认模型
-MODEL_GTP5_5 = deepseek-v4-pro
-MODEL_GTP5_4 = deepseek-v4-flash
-MODEl_GPT5_4_MINI = deepseek-v4-flash
-MODEL_GTP5_3_CODEX = deepseek-v4-flash
-MODEL_GTP5_2 = deepseek-v4-flash
+MODEL_GTP5_5=deepseek-v4-pro
+MODEL_GTP5_4=deepseek-v4-flash
+MODEl_GPT5_4_MINI=deepseek-v4-flash
+MODEL_GTP5_3_CODEX=deepseek-v4-flash
+MODEL_GTP5_2=deepseek-v4-flash
 
 # 可选：DeepSeek API 地址（默认官方地址，一般无需修改）
 # DEEPSEEK_URL=https://api.deepseek.com/v1/chat/completions
