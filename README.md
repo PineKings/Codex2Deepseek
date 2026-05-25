@@ -159,7 +159,7 @@ docker run -d -p 127.0.0.1:12345:12345 \
 ### 5. Docker 部署
 #### 拉取镜像
 ```bash
-docker pull pinekings/codex2deepseek:latest
+docker pull infoepochai/codex2deepseek:latest
 ```
 
 #### 创建.env文件
@@ -201,7 +201,7 @@ docker run -d \
   --name codex2deepseek \
   -p 12345:12345 \
   --env-file ./.env \
-  pinekings/codex2deepseek:latest
+  infoepochai/codex2deepseek:latest
 ```
 
 ## 用法
