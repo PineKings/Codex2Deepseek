@@ -156,9 +156,24 @@ docker run -d -p 127.0.0.1:12345:12345 \
 
 ### 5. Docker 部署
 #### 拉取镜像
+
+- 苹果系统M系列芯片
 ```bash
-docker pull infoepochai/codex2deepseek:latest
+docker pull infoepochai/codex2deepseek:arm64
 ```
+
+- 其他系统
+```bash
+docker pull infoepochai/codex2deepseek:amd64
+```
+
+#### 运行容器
+```bash
+docker run -d \
+  --name codex2deepseek \
+  -p 12345:12345 \
+  --env-file ./.env \
+  infoepochai/codex2deepseek:<arm64或者amd64>
 
 #### 创建.env文件
 ```bash
