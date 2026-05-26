@@ -27,9 +27,10 @@ debug_request_body.txt
 
 # Docker (避免层级嵌套)
 docker/
+scripts/
 Dockerfile
 docker-compose*.yml
-
+cli.py
 # Build / Dist
 dist/
 build/

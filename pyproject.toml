@@ -8,4 +8,5 @@ dependencies = [
     "fastapi>=0.136.0",
     "uvicorn>=0.44.0",
     "requests>=2.28",
+    "rtoml>=0.13.0",
 ]

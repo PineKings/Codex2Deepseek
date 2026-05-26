@@ -49,6 +49,11 @@ app = FastAPI(
     lifespan=create_lifespan,
 )
 
+@app.get("/health")
+async def health_check():
+    """健康检查端点"""
+    return {"status": "ok"}
+
 # 配置中间件
 setup_middleware(app)
 
