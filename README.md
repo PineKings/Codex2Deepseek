@@ -4,6 +4,8 @@ OpenAI Responses API ↔ DeepSeek Chat API 流式转发代理。
 
 将 OpenAI Codex 等客户端发出的 Responses API 请求，实时转换为 DeepSeek Chat Completions 格式，实现 SSE 流式透传。
 
+同时支持 使用OpenAI账号登录Codex和不登录纯自定义模式。
+
 > 妈的，使用Codex，想用DeepSeek接入，找了半天工具，就没发现什么非常好用的工具，协议都不匹配，找到 [Nigel211/codex_deepseek_proxy](https://github.com/Nigel211/codex_deepseek_proxy.git) 但是单文件模式不习惯，使用flask框架也不喜欢，同时在使用中发现模型的对应问题，很头大，没工夫去慢慢研究了，所以重构了fastAPI的版本，后续有空的话会增加其他各路国产模型的适配。
 
 
@@ -154,7 +156,7 @@ docker run -d -p 127.0.0.1:12345:12345 \
 - `Dockerfile` 位于项目根目录，使用 python:3.12-slim 作为构建和运行时基镜像，避免 musl/glibc 不兼容问题
 - `docker/docker-compose.yml` 位于 `docker/` 目录下，通过 `context: ..` 引用项目根目录的 `Dockerfile` 和 `.env`
 
-### 5. Docker 部署
+### 5. Docker 部署 （推荐）
 #### 拉取镜像
 
 - 苹果系统M系列芯片
@@ -219,11 +221,19 @@ docker run -d \
 
 ## 用法
 
-### API Endpoints 1
+### API Endpoints 1（推荐）
 
 本项目提供了一个简易的命令行接口，用于将配置Codex 的桌面端请求代理到本中转服务
+
+- 用法1 直接传递参数运行
+其中，`-u` 参数为代理地址，`-k` 为你的MY_API_KEY，`-t` 为初始化类型（c为custom_init，o为openai_init，分别代表是否使用OpenAI登录）
 ```
-uv run cli.py -u http://<你的ip>:12345 -k <你设置的MY_API_KEY>
+uv run cli.py -u http://<你的ip>:12345 -k <你设置的MY_API_KEY> -t <初始化类型（o/c）>
+```
+
+- 用法2 启动后交互式输入
+```
+uv run cli.py
 ```
 
 ### API Endpoints 2
