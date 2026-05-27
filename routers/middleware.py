@@ -11,6 +11,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import MODEL_MAP, DEFAULT_MODEL, MY_API_KEY
 
+try:
+    import zstandard as zstd
+    HAS_ZSTD = True
+except ImportError:
+    zstd = None
+    HAS_ZSTD = False
+
 
 def setup_middleware(app):
     """配置所有中间件
@@ -52,10 +59,52 @@ def setup_middleware(app):
 
     @app.middleware("http")
     async def resolve_model(request, call_next):
-        """拦截请求中的模型名称，按 MODEL_MAP 进行替换"""
+        """拦截请求中的模型名称，按 MODEL_MAP 进行替换
+
+        同时处理 Content-Encoding: zstd 的请求体解压。
+        """
         if request.method == "POST":
             body = await request.body()
             if body:
+                # zstd 解压支持
+                content_encoding = request.headers.get("content-encoding", "")
+                if content_encoding == "zstd":
+                    if not HAS_ZSTD:
+                        return Response(
+                            content=json.dumps({
+                                "error": {
+                                    "message": "zstd decompression not available; install zstandard package",
+                                    "type": "server_error",
+                                },
+                            }),
+                            status_code=500,
+                            media_type="application/json",
+                        )
+                    try:
+                        import io
+                        dctx = zstd.ZstdDecompressor()
+                        buffer = io.BytesIO()
+                        with dctx.stream_reader(io.BytesIO(body)) as reader:
+                            while True:
+                                chunk = reader.read(65536)
+                                if not chunk:
+                                    break
+                                buffer.write(chunk)
+                        body = buffer.getvalue()
+                        # 覆盖缓存的 request body，让下游 handler 读到解压后的数据
+                        request._body = body
+                    except zstd.ZstdError as e:
+                        return Response(
+                            content=json.dumps({
+                                "error": {
+                                    "message": f"zstd decompression failed: {e}",
+                                    "type": "invalid_request_error",
+                                },
+                            }),
+                            status_code=400,
+                            media_type="application/json",
+                        )
+                # 解析 model 字段
                 try:
                     data = json.loads(body)
                     original = data.get("model")
